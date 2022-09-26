@@ -12,9 +12,11 @@ pipeline {
         stage('Build'){
             steps {
                 echo "Compile Frontend"
-                sh 'npm --version'
-                sh 'npm install'
-                sh 'npm run build'
+                dir("${env.WORKSPACE}"){
+                    sh 'npm --version'
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
             }
         }
 
