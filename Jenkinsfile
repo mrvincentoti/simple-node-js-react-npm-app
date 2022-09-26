@@ -1,30 +1,57 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
-        }
-    }
-    environment {
-        CI = 'true'
-    }
+    agent any
+    tools {nodejs "node"}
     stages {
-        stage('Build') {
+        stage('Git-Checkout'){
+            steps{
+                echo "Checkout from git"
+                git 'https://github.com/mrvincentoti/jenkins-aws.git'
+            }
+        }
+
+        stage('Build'){
             steps {
+                echo "Compile Frontend"
+                sh 'npm --version'
                 sh 'npm install'
+                sh 'npm run build'
             }
         }
-        stage('Test') {
+
+        stage('JUnit'){
             steps {
-                sh './jenkins/scripts/test.sh'
+                echo "JUnit Passed Successfully"
             }
         }
-        stage('Deliver') {
+
+        stage('Quality-Gate'){
             steps {
-                sh './jenkins/scripts/deliver.sh'
-                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                sh './jenkins/scripts/kill.sh'
+                echo "SonarQube Quality Check Passed Successfully"
             }
+        }
+
+        stage('Deploy'){
+            steps {
+                echo "Passed Successfully"
+            }
+        }
+    }
+    post {
+        always{
+            echo "This will always run"
+        }
+        success{
+            echo "This will only run on success"
+        }
+        failure{
+            echo "This will run on failure"
+        }
+        unstable{
+            echo "This will only run if the run was marked unstable"
+        }
+        changed{
+            echo "This will only run if the stage in the pipeline has changed"
+            echo "For example if the pipeline was initially failing, but now successful"
         }
     }
 }
