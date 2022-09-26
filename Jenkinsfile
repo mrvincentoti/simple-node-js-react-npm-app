@@ -13,6 +13,8 @@ pipeline {
             steps {
                 echo "Compile Frontend"
                 sh 'npm --version'
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
 
