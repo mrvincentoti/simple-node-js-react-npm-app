@@ -5,7 +5,7 @@ pipeline {
         stage('Git-Checkout'){
             steps{
                 echo "Checkout from git"
-                git 'https://github.com/mrvincentoti/jenkins-aws.git'
+                git 'https://github.com/mrvincentoti/simple-node-js-react-npm-app.git'
             }
         }
 
