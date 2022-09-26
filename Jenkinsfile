@@ -12,11 +12,17 @@ pipeline {
         stage('Build'){
             steps {
                 echo "Compile Frontend"
-                dir("${env.WORKSPACE}"){
-                    sh 'npm --version'
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
+                sh '''
+                    mkdir -p .npm-global
+                    mkdir -p _cacache
+                    export PATH=.npm-global/bin:$PATH
+
+                    npm config set prefix '.npm-global'
+                    npm config set cache '_cacache'
+                    npm config set jobs 1
+                    npm config set strict-ssl false
+                  '''
+                  sh 'npm i'
             }
         }
 
